@@ -122,6 +122,14 @@ async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     first_name = update.effective_user.first_name
+    
+# Guardamos usuarios que escriben al bot
+usuarios_registrados = {}
+
+# --- Usuario normal ---
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    first_name = update.effective_user.first_name
 
     # Guardamos en la lista
     usuarios_registrados[chat_id] = first_name
