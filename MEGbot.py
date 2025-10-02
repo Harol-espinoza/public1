@@ -3,7 +3,8 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 import os
 
 TOKEN = os.getenv("7526499068:AAHoBc8XfKU0kB56vLqLhKVfxKMZiOmwgCc")
-ADMIN_CHAT_ID = int(os.getenv("8386266437"))
+
+ID_CHAT_ADMINISTRADOR = int(os.getenv("ID_CHAT_ADMINISTRADOR"))
 
 
 # --- Funciones del bot ---
