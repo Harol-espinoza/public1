@@ -24,7 +24,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     first_name = update.effective_user.first_name
 
     # Guardamos en la lista
-    usuarios_registrados[chat_id] = first_name
+    usuarios_registrados[chat_id] = {
+    'first_name': first_name,
+    'username': update.effective_user.username
+}
+
 
     await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
     """Mensaje de bienvenida"""
@@ -136,6 +140,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Guardamos en la lista
     usuarios_registrados[chat_id] = first_name
+    
 
     await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
 
