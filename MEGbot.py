@@ -1,19 +1,18 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
-
+print("📌 ID_CHAT_ADMINISTRADOR:", os.getenv("ID_CHAT_ADMINISTRADOR"))
 import os
 
-print("📌 ID_CHAT_ADMINISTRADOR:", os.getenv("ID_CHAT_ADMINISTRADOR"))
-
-TOKEN = os.getenv("BOT_TOKEN")
-
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
 
-if ID_CHAT_ADMINISTRADOR is None:
-    raise ValueError("❌ Falta la variable de entorno ID_CHAT_ADMINISTRADOR")
-else:
-    ID_CHAT_ADMINISTRADOR = int(ID_CHAT_ADMINISTRADOR)
+if BOT_TOKEN is None:
+    raise ValueError("❌ Falta la variable BOT_TOKEN")
 
+if ID_CHAT_ADMINISTRADOR is None:
+    raise ValueError("❌ Falta la variable ID_CHAT_ADMINISTRADOR")
+
+ID_CHAT_ADMINISTRADOR = int(ID_CHAT_ADMINISTRADOR)
 
 
 
@@ -129,7 +128,7 @@ async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- Configuración del bot ---
 def main():
-    app = Application.builder().token(TOKEN).build()
+    app = Application.builder().token(BOT_TOKEN).build()
 
     # Comandos
     app.add_handler(CommandHandler("start", start))
@@ -143,8 +142,19 @@ def main():
     # Captura mensajes normales
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, recibir_mensaje))
 
+    # Función para notificar al admin cuando el bot arranca
+    async def notificar_admin(app):
+        await app.bot.send_message(
+            chat_id=ID_CHAT_ADMINISTRADOR,
+            text="✅ Bot iniciado correctamente"
+        )
+
+    # Se asigna el evento post_init
+    app.post_init = notificar_admin
+
     print("🤖 Bot corriendo...")
     app.run_polling()
+
 
 if __name__ == "__main__":
     main()
