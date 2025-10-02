@@ -5,7 +5,7 @@ import os
 
 print("📌 ID_CHAT_ADMINISTRADOR:", os.getenv("ID_CHAT_ADMINISTRADOR"))
 
-TOKEN = os.getenv("7526499068:AAHoBc8XfKU0kB56vLqLhKVfxKMZiOmwgCc")
+TOKEN = os.getenv("BOT_TOKEN")
 
 ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
 
