@@ -124,10 +124,21 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    username = f"@{user.username}" if user.username else f"ID:{user.id}"
+
+    # Obtener el username si existe, sino poner "Sin username"
+    username = f"@{user.username}" if user.username else "Sin username"
+
+    # ID siempre disponible
+    user_id = user.id
+
     if update.message.text:
-        msg = f"📩 Mensaje de {user.first_name} ({username}):\n\n{update.message.text}"
+        msg = (
+            f"📩 Mensaje de {user.first_name} "
+            f"({username} | ID:{user_id}):\n\n"
+            f"{update.message.text}"
+        )
         await avisar_admins(context.bot, msg)
+
 
 # --- Admin escribe a un usuario ---
 async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
