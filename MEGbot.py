@@ -99,7 +99,7 @@ async def listo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Avisar al admin
     user = update.effective_user
     msg = f"✅ {user.first_name} (@{user.username}) acaba de unirse usando /listo. PRUEBA"
-    await context.bot.send_message(chat_id=ADMIN_CHAT_ID, text=msg)
+    await context.bot.send_message(chat_id=ADMIN_IDS, text=msg)
 
 async def listo1(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Cuando alguien ya se unió"""
@@ -117,14 +117,14 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Notificación al admin
     msg = f"⚠️ {user.first_name} (@{user.username}) quiere hablar contigo."
-    await context.bot.send_message(chat_id=ADMIN_CHAT_ID, text=msg)
+    await context.bot.send_message(chat_id=ADMIN_IDS, text=msg)
 
 async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Reenvía todo lo que mandan los usuarios al admin"""
     user = update.effective_user
     if update.message.text:
         msg = f"📩 Mensaje de {user.first_name} (@{user.username}):\n\n{update.message.text}"
-        await context.bot.send_message(chat_id=ADMIN_CHAT_ID, text=msg)
+        await context.bot.send_message(chat_id=ADMIN_IDS, text=msg)
 
 # --- Configuración del bot ---
 def main():
@@ -145,7 +145,7 @@ def main():
     # Función para notificar al admin cuando el bot arranca
     async def notificar_admin(app):
         await app.bot.send_message(
-            chat_id=ID_CHAT_ADMINISTRADOR,
+            chat_id=ADMIN_IDS,
             text="✅ Bot iniciado correctamente"
         )
 
