@@ -7,7 +7,7 @@ print("📌 ID_CHAT_ADMINISTRADOR:", os.getenv("ID_CHAT_ADMINISTRADOR"))
 
 TOKEN = os.getenv("7526499068:AAHoBc8XfKU0kB56vLqLhKVfxKMZiOmwgCc")
 
-ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
+ID_CHAT_ADMINISTRADOR = os.getenv("8386266437")
 
 if ID_CHAT_ADMINISTRADOR is None:
     raise ValueError("❌ Falta la variable de entorno ID_CHAT_ADMINISTRADOR")
