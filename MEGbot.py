@@ -165,9 +165,21 @@ async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     mensaje = " ".join(context.args[1:])   
+
+     # Obtener información del usuario si está registrado
+    user_info = usuarios_registrados.get(user_id)
+    if user_info:
+        # user_info puede ser un dict con 'first_name' y 'username'
+        first_name = user_info.get('first_name', 'Usuario')
+        username = f"@{user_info['username']}" if user_info.get('username') else f"ID:{user_id}"
+        identificador = f"{first_name} ({username})"
+    else:
+        identificador = f"ID:{user_id}"  # Alternativo si no está registrado
+
     # Enviar mensaje al usuario
     await context.bot.send_message(chat_id=user_id, text=f"📩 Mensaje del admin:\n{mensaje}")
-    await context.bot.send_message(chat_id=chat_id_admin, text=f"✅ Mensaje enviado a {user_id}")
+    await context.bot.send_message(chat_id=chat_id_admin, text=f"✅ Mensaje enviado a {identificador}")
+    await context.bot.send_message(chat_id=chat_id_admin, text=f"⚠️ No se pudo enviar el mensaje a {identificador}: {e}")
 
 # --- Listar usuarios ---
 async def listar(update: Update, context: ContextTypes.DEFAULT_TYPE):
