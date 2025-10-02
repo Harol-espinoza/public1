@@ -28,10 +28,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     usuarios_registrados[chat_id] = {
         'first_name': first_name,
         'username': username
-    }
-
-
-    await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
+    
+ await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
     """Mensaje de bienvenida"""
     texto = (
         "👋 Hola buenas\n\n"
@@ -45,6 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/admin - quiero hablar con el admin"
     )
     await update.message.reply_text(texto)
+}
 
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Muestra texto + imagen"""
