@@ -144,7 +144,7 @@ async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id_admin = update.effective_chat.id
 
     # Verificamos que sea admin
-    if chat_id_admin not in ADMINS:
+    if chat_id_admin not in ADMIN_IDS:
         await context.bot.send_message(chat_id=chat_id_admin, text="⛔ No tienes permisos.")
         return
 
@@ -167,7 +167,7 @@ async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # --- Listar usuarios ---
 async def listar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id_admin = update.effective_chat.id
-    if chat_id_admin not in ADMINS:
+    if chat_id_admin not in ADMIN_IDS:
         return
 
     if not usuarios_registrados:
