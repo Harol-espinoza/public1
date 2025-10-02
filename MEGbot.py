@@ -1,10 +1,10 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+import os
 
-# 👉 Pega tu token aquí
-TOKEN = "7526499068:AAHoBc8XfKU0kB56vLqLhKVfxKMZiOmwgCc"
-# 👉 Tu chat ID como admin
-ADMIN_CHAT_ID = 8386266437
+TOKEN = os.getenv("7526499068:AAHoBc8XfKU0kB56vLqLhKVfxKMZiOmwgCc")
+ADMIN_CHAT_ID = int(os.getenv("8386266437"))
+
 
 # --- Funciones del bot ---
 
