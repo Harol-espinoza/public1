@@ -99,6 +99,7 @@ async def listo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = f"✅ {user.first_name} (@{user.username}) se unió con /listo (PRUEBA)"
     await avisar_admins(context.bot, msg)
 
+
 async def listo1(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
     user = update.effective_user
@@ -133,15 +134,15 @@ def main():
     # Captura mensajes normales
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, recibir_mensaje))
 
- async def notificar_admin(app):
-        await avisar_admins(app.bot, "✅ Bot iniciado correctamente")
-
-    # Se asigna el evento post_init
     app.post_init = notificar_admin
 
     print("🤖 Bot corriendo...")
-
     app.run_polling()
+
+
+# === Aquí va la función, fuera de main ===
+async def notificar_admin(app):
+    await avisar_admins(app.bot, "✅ Bot iniciado correctamente")
 
 
 if __name__ == "__main__":
