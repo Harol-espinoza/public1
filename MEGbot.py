@@ -1,6 +1,5 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
-print("📌 ID_CHAT_ADMINISTRADOR:", os.getenv("ID_CHAT_ADMINISTRADOR"))
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
