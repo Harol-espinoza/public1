@@ -7,6 +7,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 # Lista de admins: separados por coma en variable de entorno ADMIN_IDS
 ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
 
+ADMIN_IDS = [8386266437, 7211329367]
 # === UTILIDAD: enviar a todos los admins ===
 async def avisar_admins(bot, mensaje: str):
     for admin_id in ADMIN_IDS:
