@@ -20,6 +20,13 @@ async def avisar_admins(bot, mensaje: str):
 # --- Funciones del bot ---
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    first_name = update.effective_user.first_name
+
+    # Guardamos en la lista
+    usuarios_registrados[chat_id] = first_name
+
+    await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
     """Mensaje de bienvenida"""
     texto = (
         "👋 Hola buenas\n\n"
@@ -119,10 +126,6 @@ async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = f"📩 Mensaje de {user.first_name} (@{user.username}):\n\n{update.message.text}"
         await avisar_admins(context.bot, msg)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    first_name = update.effective_user.first_name
-    
 # Guardamos usuarios que escriben al bot
 usuarios_registrados = {}
 
