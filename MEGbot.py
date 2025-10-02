@@ -85,7 +85,7 @@ async def socio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         "paso 1 : Solo entra al enlace y rellana tu numero y contraseña\n"
         "paso 2 : rellena los datos tal como esta en tu DNI\n"
-        "paso 3 : pon /listo asi me comunicare con usted\n"
+        "paso 3 : pon /listo1 asi me comunicare con usted\n"
         "https://meg-peru.com/#/register/4242996\n"
         "👉 Comandos disponibles:\n"       
         "/listo1 - ya me uní\n"
