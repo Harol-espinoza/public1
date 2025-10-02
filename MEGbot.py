@@ -5,20 +5,15 @@ import os
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
 
-ADMIN_IDS = os.getenv("ADMIN_IDS")
+ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
 
-if ADMIN_IDS is None:
-# Convertir a lista de enteros
-ADMIN_IDS = [int(x.strip()) for x in ADMIN_IDS.split(",")]
-
-# --- Ejemplo de función para mandar mensaje a todos los admins ---
-async def enviar_a_admins(bot, texto):
+# === UTILIDAD: enviar a todos los admins ===
+async def avisar_admins(bot, mensaje: str):
     for admin_id in ADMIN_IDS:
         try:
-            await bot.send_message(chat_id=admin_id, text=texto)
+            await bot.send_message(chat_id=admin_id, text=mensaje)
         except Exception as e:
-            print(f"⚠️ Error enviando mensaje a {admin_id}: {e}")
-
+            print(f"⚠️ Error con admin {admin_id}: {e}")
 
 
 # --- Funciones del bot ---
