@@ -42,7 +42,7 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "No necesitas pagar nada para empezar.\n\n"
         "paso 1 : Solo entra al enlace y rellana tu numero y contraseña\n"
         "paso 2 : rellena los datos tal como esta en tu DNI\n"
-        "paso 3 : pon /listo asi me comunicare con usted"
+        "paso 3 : pon /listo asi me comunicare con usted\n"
         "https://meg-peru.com/#/register/4242996\n"
         "👉 Comandos disponibles:\n"       
         "/listo - ya me uní\n"
@@ -83,7 +83,7 @@ async def socio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = (
         "🎶 PASOS PARA SER SOCIO\n\n"
 
-        "paso 1 : Solo entra al enlace y rellana tu numero y contraseña\n"
+        "paso 1 : Solo entra al enlace y rellena tu numero y contraseña\n"
         "paso 2 : rellena los datos tal como esta en tu DNI\n"
         "paso 3 : pon /listo1 asi me comunicare con usted\n"
         "https://meg-peru.com/#/register/4242996\n"
