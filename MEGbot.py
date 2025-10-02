@@ -1,10 +1,19 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
+
 import os
+
+print("📌 ID_CHAT_ADMINISTRADOR:", os.getenv("ID_CHAT_ADMINISTRADOR"))
 
 TOKEN = os.getenv("7526499068:AAHoBc8XfKU0kB56vLqLhKVfxKMZiOmwgCc")
 
-ID_CHAT_ADMINISTRADOR = int(os.getenv("ID_CHAT_ADMINISTRADOR"))
+ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
+
+if ID_CHAT_ADMINISTRADOR is None:
+    raise ValueError("❌ Falta la variable de entorno ID_CHAT_ADMINISTRADOR")
+else:
+    ID_CHAT_ADMINISTRADOR = int(ID_CHAT_ADMINISTRADOR)
+
 
 
 # --- Funciones del bot ---
