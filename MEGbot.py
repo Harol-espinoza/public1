@@ -119,6 +119,56 @@ async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = f"📩 Mensaje de {user.first_name} (@{user.username}):\n\n{update.message.text}"
         await avisar_admins(context.bot, msg)
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    first_name = update.effective_user.first_name
+
+    # Guardamos en la lista
+    usuarios_registrados[chat_id] = first_name
+
+    await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
+
+# --- Admin escribe a un usuario ---
+async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id_admin = update.effective_chat.id
+
+    # Verificamos que sea admin
+    if chat_id_admin not in ADMINS:
+        await context.bot.send_message(chat_id=chat_id_admin, text="⛔ No tienes permisos.")
+        return
+
+    if len(context.args) < 2:
+        await context.bot.send_message(chat_id=chat_id_admin, text="Uso: /enviar <id_usuario> <mensaje>")
+        return
+
+    # Extraer ID y mensaje
+    try:
+        user_id = int(context.args[0])
+    except ValueError:
+        await context.bot.send_message(chat_id=chat_id_admin, text="❌ ID inválido.")
+        return
+
+    mensaje = " ".join(context.args[1:])   
+    # Enviar mensaje al usuario
+    await context.bot.send_message(chat_id=user_id, text=f"📩 Mensaje del admin:\n{mensaje}")
+    await context.bot.send_message(chat_id=chat_id_admin, text=f"✅ Mensaje enviado a {user_id}")
+
+# --- Listar usuarios ---
+async def listar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id_admin = update.effective_chat.id
+    if chat_id_admin not in ADMINS:
+        return
+
+    if not usuarios_registrados:
+        await context.bot.send_message(chat_id=chat_id_admin, text="📭 No hay usuarios registrados aún.")
+        return
+
+    texto = "📋 Usuarios registrados:\n"
+    for uid, nombre in usuarios_registrados.items():
+        texto += f"➡️ {uid} - {nombre}\n"
+
+    await context.bot.send_message(chat_id=chat_id_admin, text=texto)     
+
 # --- Configuración del bot ---
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
@@ -131,6 +181,8 @@ def main():
     app.add_handler(CommandHandler("listo", listo))
     app.add_handler(CommandHandler("listo1", listo1))
     app.add_handler(CommandHandler("admin", admin))
+    app.add_handler(CommandHandler("enviar", enviar))
+    app.add_handler(CommandHandler("listar", listar))
 
     # Captura mensajes normales
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, recibir_mensaje))
