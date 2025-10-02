@@ -8,8 +8,6 @@ ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
 ADMIN_IDS = os.getenv("ADMIN_IDS")
 
 if ADMIN_IDS is None:
-    raise ValueError("❌ Falta la variable ADMIN_IDS")
-
 # Convertir a lista de enteros
 ADMIN_IDS = [int(x.strip()) for x in ADMIN_IDS.split(",")]
 
