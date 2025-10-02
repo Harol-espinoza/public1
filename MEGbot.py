@@ -4,10 +4,12 @@ import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# Lista de admins: separados por coma en variable de entorno ADMIN_IDS
-ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
-
+# Lista de admins
 ADMIN_IDS = [8386266437, 7211329367]
+
+# Guardar usuarios
+usuarios_registrados = {}
+
 # === UTILIDAD: enviar a todos los admins ===
 async def avisar_admins(bot, mensaje: str):
     for admin_id in ADMIN_IDS:
@@ -16,9 +18,7 @@ async def avisar_admins(bot, mensaje: str):
         except Exception as e:
             print(f"⚠️ Error con admin {admin_id}: {e}")
 
-
 # --- Funciones del bot ---
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     first_name = update.effective_user.first_name
@@ -28,9 +28,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     usuarios_registrados[chat_id] = {
         'first_name': first_name,
         'username': username
-    
- await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
-    """Mensaje de bienvenida"""
+    }
+
+    # Mensaje de bienvenida
+    await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
+
     texto = (
         "👋 Hola buenas\n\n"
         "Te gustaría ganar dinero solo escuchando música?\n\n"
@@ -43,10 +45,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/admin - quiero hablar con el admin"
     )
     await update.message.reply_text(texto)
-}
 
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Muestra texto + imagen"""
     texto = (
         "🎶 PRUEBA GRATIS\n\n"
         "Puedes hacer la prueba totalmente gratis y ganar 13 soles en 4 días.\n"
@@ -62,7 +62,6 @@ async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(texto)
 
 async def info2(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Información completa del negocio"""
     texto = (
         "📢 TE MUESTRO LA INFORMACIÓN PARA SER SOCIO:\n\n"
         "Con inversión:\n"
@@ -88,12 +87,9 @@ async def info2(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(texto)
 
-
 async def socio(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Muestra texto + imagen"""
     texto = (
         "🎶 PASOS PARA SER SOCIO\n\n"
-
         "paso 1 : Solo entra al enlace y rellena tu numero y contraseña\n"
         "paso 2 : rellena los datos tal como esta en tu DNI\n"
         "paso 3 : pon /listo1 asi me comunicare con usted\n"
@@ -104,43 +100,39 @@ async def socio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(texto)
 
-
+# --- Funciones admin ---
 async def listo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
     user = update.effective_user
-    msg = f"✅ {user.first_name} (@{user.username}) se unió con /listo (PRUEBA)"
+    username = f"@{user.username}" if user.username else f"ID:{user.id}"
+    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
+    msg = f"✅ {user.first_name} ({username}) se unió con /listo (PRUEBA)"
     await avisar_admins(context.bot, msg)
 
-
 async def listo1(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
     user = update.effective_user
-    msg = f"✅ {user.first_name} (@{user.username}) se unió con /listo1 (SOCIO)"
+    username = f"@{user.username}" if user.username else f"ID:{user.id}"
+    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
+    msg = f"✅ {user.first_name} ({username}) se unió con /listo1 (SOCIO)"
     await avisar_admins(context.bot, msg)
 
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+    username = f"@{user.username}" if user.username else f"ID:{user.id}"
     await update.message.reply_text("📩 El admin se pondrá en contacto contigo pronto.")
-    msg = f"⚠️ {user.first_name} (@{user.username}) quiere hablar contigo."
+    msg = f"⚠️ {user.first_name} ({username}) quiere hablar contigo."
     await avisar_admins(context.bot, msg)
 
 async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+    username = f"@{user.username}" if user.username else f"ID:{user.id}"
     if update.message.text:
-        msg = f"📩 Mensaje de {user.first_name} (@{user.username}):\n\n{update.message.text}"
+        msg = f"📩 Mensaje de {user.first_name} ({username}):\n\n{update.message.text}"
         await avisar_admins(context.bot, msg)
 
 # --- Admin escribe a un usuario ---
-user_info = usuarios_registrados.get(user_id)
-if user_info:
-    first_name = user_info.get('first_name', 'Usuario')
-    username = f"@{user_info['username']}" if user_info.get('username') else f"ID:{user_id}"
-    identificador = f"{first_name} ({username})"
-else:
-    identificador = f"ID:{user_id}"
+async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id_admin = update.effective_chat.id
 
-
-    # Verificamos que sea admin
     if chat_id_admin not in ADMIN_IDS:
         await context.bot.send_message(chat_id=chat_id_admin, text="⛔ No tienes permisos.")
         return
@@ -149,29 +141,26 @@ else:
         await context.bot.send_message(chat_id=chat_id_admin, text="Uso: /enviar <id_usuario> <mensaje>")
         return
 
-    # Extraer ID y mensaje
     try:
         user_id = int(context.args[0])
     except ValueError:
         await context.bot.send_message(chat_id=chat_id_admin, text="❌ ID inválido.")
         return
 
-    mensaje = " ".join(context.args[1:])   
-
-     # Obtener información del usuario si está registrado
+    mensaje = " ".join(context.args[1:])
     user_info = usuarios_registrados.get(user_id)
     if user_info:
-        # user_info puede ser un dict con 'first_name' y 'username'
         first_name = user_info.get('first_name', 'Usuario')
         username = f"@{user_info['username']}" if user_info.get('username') else f"ID:{user_id}"
         identificador = f"{first_name} ({username})"
     else:
-        identificador = f"ID:{user_id}"  # Alternativo si no está registrado
+        identificador = f"ID:{user_id}"
 
-    # Enviar mensaje al usuario
-    await context.bot.send_message(chat_id=user_id, text=f"📩 Mensaje del admin:\n{mensaje}")
-    await context.bot.send_message(chat_id=chat_id_admin, text=f"✅ Mensaje enviado a {identificador}")
-    await context.bot.send_message(chat_id=chat_id_admin, text=f"⚠️ No se pudo enviar el mensaje a {identificador}: {e}")
+    try:
+        await context.bot.send_message(chat_id=user_id, text=f"📩 Mensaje del admin:\n{mensaje}")
+        await context.bot.send_message(chat_id=chat_id_admin, text=f"✅ Mensaje enviado a {identificador}")
+    except Exception as e:
+        await context.bot.send_message(chat_id=chat_id_admin, text=f"⚠️ No se pudo enviar el mensaje a {identificador}: {e}")
 
 # --- Listar usuarios ---
 async def listar(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -184,10 +173,12 @@ async def listar(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     texto = "📋 Usuarios registrados:\n"
-    for uid, nombre in usuarios_registrados.items():
-        texto += f"➡️ {uid} - {nombre}\n"
+    for uid, info in usuarios_registrados.items():
+        first_name = info.get('first_name', 'Usuario')
+        username = f"@{info['username']}" if info.get('username') else f"ID:{uid}"
+        texto += f"➡️ {first_name} ({username})\n"
 
-    await context.bot.send_message(chat_id=chat_id_admin, text=texto)     
+    await context.bot.send_message(chat_id=chat_id_admin, text=texto)
 
 # --- Configuración del bot ---
 def main():
@@ -212,11 +203,9 @@ def main():
     print("🤖 Bot corriendo...")
     app.run_polling()
 
-
-# === Aquí va la función, fuera de main ===
+# === Función para notificar admins al iniciar ===
 async def notificar_admin(app):
     await avisar_admins(app.bot, "✅ Bot iniciado correctamente")
-
 
 if __name__ == "__main__":
     main()
