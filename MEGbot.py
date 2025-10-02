@@ -22,12 +22,13 @@ async def avisar_admins(bot, mensaje: str):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     first_name = update.effective_user.first_name
+    username = update.effective_user.username  # Puede ser None
 
-    # Guardamos en la lista
+    # Guardamos un diccionario con first_name y username
     usuarios_registrados[chat_id] = {
-    'first_name': first_name,
-    'username': update.effective_user.username
-}
+        'first_name': first_name,
+        'username': username
+    }
 
 
     await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
@@ -130,23 +131,15 @@ async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
         msg = f"📩 Mensaje de {user.first_name} (@{user.username}):\n\n{update.message.text}"
         await avisar_admins(context.bot, msg)
 
-# Guardamos usuarios que escriben al bot
-usuarios_registrados = {}
-
-# --- Usuario normal ---
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    first_name = update.effective_user.first_name
-
-    # Guardamos en la lista
-    usuarios_registrados[chat_id] = first_name
-    
-
-    await context.bot.send_message(chat_id=chat_id, text=f"👋 Hola {first_name}, estás registrado en el bot.")
-
 # --- Admin escribe a un usuario ---
-async def enviar(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id_admin = update.effective_chat.id
+user_info = usuarios_registrados.get(user_id)
+if user_info:
+    first_name = user_info.get('first_name', 'Usuario')
+    username = f"@{user_info['username']}" if user_info.get('username') else f"ID:{user_id}"
+    identificador = f"{first_name} ({username})"
+else:
+    identificador = f"ID:{user_id}"
+
 
     # Verificamos que sea admin
     if chat_id_admin not in ADMIN_IDS:
