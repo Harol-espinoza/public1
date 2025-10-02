@@ -3,8 +3,8 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-ID_CHAT_ADMINISTRADOR = os.getenv("ID_CHAT_ADMINISTRADOR")
 
+# Lista de admins: separados por coma en variable de entorno ADMIN_IDS
 ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
 
 # === UTILIDAD: enviar a todos los admins ===
@@ -94,37 +94,28 @@ async def socio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def listo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Cuando alguien ya se unió"""
-    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo el admin te escribira 🚀")
-    # Avisar al admin
+    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
     user = update.effective_user
-    msg = f"✅ {user.first_name} (@{user.username}) acaba de unirse usando /listo. PRUEBA"
-    await context.bot.send_message(chat_id=ADMIN_IDS, text=msg)
+    msg = f"✅ {user.first_name} (@{user.username}) se unió con /listo (PRUEBA)"
+    await avisar_admins(context.bot, msg)
 
 async def listo1(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Cuando alguien ya se unió"""
-    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo el admin te escribira 🚀")
-    # Avisar al admin
+    await update.message.reply_text("🎉 ¡Perfecto! Bienvenido al equipo, el admin te escribirá 🚀")
     user = update.effective_user
-    msg = f"✅ {user.first_name} (@{user.username}) acaba de unirse usando /listo. SOCIO"
-    await context.bot.send_message(chat_id=ADMIN_CHAT_ID, text=msg)
+    msg = f"✅ {user.first_name} (@{user.username}) se unió con /listo1 (SOCIO)"
+    await avisar_admins(context.bot, msg)
 
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Avisar al admin que alguien quiere hablar"""
     user = update.effective_user
-    texto = f"📩 Hola {user.first_name}, el admin se pondrá en contacto contigo pronto."
-    await update.message.reply_text(texto)
-
-    # Notificación al admin
+    await update.message.reply_text("📩 El admin se pondrá en contacto contigo pronto.")
     msg = f"⚠️ {user.first_name} (@{user.username}) quiere hablar contigo."
-    await context.bot.send_message(chat_id=ADMIN_IDS, text=msg)
+    await avisar_admins(context.bot, msg)
 
 async def recibir_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Reenvía todo lo que mandan los usuarios al admin"""
     user = update.effective_user
     if update.message.text:
         msg = f"📩 Mensaje de {user.first_name} (@{user.username}):\n\n{update.message.text}"
-        await context.bot.send_message(chat_id=ADMIN_IDS, text=msg)
+        await avisar_admins(context.bot, msg)
 
 # --- Configuración del bot ---
 def main():
@@ -142,17 +133,14 @@ def main():
     # Captura mensajes normales
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, recibir_mensaje))
 
-    # Función para notificar al admin cuando el bot arranca
-    async def notificar_admin(app):
-        await app.bot.send_message(
-            chat_id=ADMIN_IDS,
-            text="✅ Bot iniciado correctamente"
-        )
+ async def notificar_admin(app):
+        await avisar_admins(app.bot, "✅ Bot iniciado correctamente")
 
     # Se asigna el evento post_init
     app.post_init = notificar_admin
 
     print("🤖 Bot corriendo...")
+
     app.run_polling()
 
 
